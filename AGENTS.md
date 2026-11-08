@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- App chrome (sidebar, bottom nav, header) lives in src/components/os/AppShell.tsx wrapped in __root; nav items come from src/lib/nav.ts so both navs stay in sync.
+- Theme is class-based (.dark) via src/lib/theme.tsx with an inline head script to avoid a flash; preference is stored in localStorage.
