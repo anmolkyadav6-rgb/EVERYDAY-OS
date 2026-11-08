@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 export type Task = { id: string; title: string; time?: string; done?: boolean; tag?: string };
 
 /** Reusable task row. Phase 1 has no task storage yet; this renders whatever tasks are passed in. */
-export function TaskItem({ task, onToggle }: { task: Task; onToggle?: (id: string) => void }) {
+export function TaskItem({ task, onToggle }: { task: Task; onToggle?: ((id: string) => void) | undefined }) {
   return (
     <div className="flex items-center gap-3 rounded-xl border bg-card px-4 py-3">
       <button
@@ -27,6 +27,6 @@ export function TaskItem({ task, onToggle }: { task: Task; onToggle?: (id: strin
   );
 }
 
-export function TaskList({ tasks, onToggle }: { tasks: Task[]; onToggle?: (id: string) => void }) {
+export function TaskList({ tasks, onToggle }: { tasks: Task[]; onToggle?: ((id: string) => void) | undefined }) {
   return <div className="flex flex-col gap-2">{tasks.map((t) => <TaskItem key={t.id} task={t} onToggle={onToggle} />)}</div>;
 }

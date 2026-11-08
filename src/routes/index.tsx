@@ -29,7 +29,7 @@ function Home() {
   const results = useMemo(() => {
     const s = q.trim().toLowerCase();
     if (!s) return [];
-    return [mainNav[0], ...destinations].filter((d) => (d.label + " " + d.description).toLowerCase().includes(s));
+    return [...mainNav, settingsNav].filter((d) => (d.label + " " + d.description).toLowerCase().includes(s));
   }, [q]);
 
   return (
