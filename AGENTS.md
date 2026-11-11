@@ -31,3 +31,4 @@ use the editor.
 
 - App chrome (sidebar, bottom nav, header) lives in src/components/os/AppShell.tsx wrapped in __root; nav items come from src/lib/nav.ts so both navs stay in sync.
 - Theme is class-based (.dark) via src/lib/theme.tsx with an inline head script to avoid a flash; preference is stored in localStorage.
+- User data (tasks, notes) lives in localStorage via src/lib/store.ts stores (useSyncExternalStore), so every page and the dashboard update live; pure tool logic is in src/lib/tools.ts with tests in src/test/logic.test.ts.
