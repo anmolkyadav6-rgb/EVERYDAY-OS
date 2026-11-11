@@ -7,10 +7,6 @@
 // the build fails. Never add compression (compressPublicAssets, vite-plugin-compression):
 // hosting already compresses at the edge.
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig({
-  base: '/EVERYDAY-OS/',
-  plugins: [react()],
-})
+export default defineConfig();
