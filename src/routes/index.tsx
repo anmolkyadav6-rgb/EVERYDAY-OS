@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Search, CalendarClock, ListChecks, ArrowUpRight, CornerDownLeft } from "lucide-react";
+import { Search, ListChecks, NotebookPen, ArrowUpRight, CornerDownLeft } from "lucide-react";
 import { mainNav, settingsNav } from "@/lib/nav";
+import { formatDue, noteStore, taskStore, todayISO } from "@/lib/store";
 import { EmptyState, Panel } from "@/components/os/ui";
 
 export const Route = createFileRoute("/")({
@@ -24,6 +25,13 @@ function Home() {
   const [now, setNow] = useState<Date | null>(null);
   const [q, setQ] = useState("");
   useEffect(() => setNow(new Date()), []);
+  const tasks = taskStore.use();
+  const notes = noteStore.use();
+  const today = now ? todayISO() : "";
+  const pending = tasks.filter((t) => !t.done);
+  const upcoming = [...pending].sort((a, b) => (a.due || "9999").localeCompare(b.due || "9999")).slice(0, 5);
+  const recent = [...notes].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 4);
+  const dueToday = pending.filter((t) => t.due === today).length;
 
   const destinations = [...mainNav.slice(1), settingsNav];
   const results = useMemo(() => {
@@ -79,7 +87,7 @@ function Home() {
       <div className="grid gap-5 md:grid-cols-5">
         <Panel title="Today's overview" className="md:col-span-2">
           <dl className="grid grid-cols-2 gap-3">
-            {[["Tasks", "0"], ["Done", "0"], ["Events", "0"], ["Notes", "0"]].map(([k, v]) => (
+            {[["Pending", String(pending.length)], ["Completed", String(tasks.length - pending.length)], ["Due today", String(dueToday)], ["Notes", String(notes.length)]].map(([k, v]) => (
               <div key={k} className="rounded-xl bg-secondary p-3">
                 <dt className="text-xs text-muted-foreground">{k}</dt>
                 <dd className="font-display text-2xl font-semibold">{v}</dd>
@@ -87,10 +95,28 @@ function Home() {
             ))}
           </dl>
         </Panel>
-        <Panel title="Tasks & upcoming" className="md:col-span-3">
+        <Panel title="Upcoming tasks & recent notes" className="md:col-span-3">
           <div className="grid gap-3 sm:grid-cols-2">
-            <EmptyState icon={ListChecks} title="No tasks yet" description="Tasks you plan will show up here." className="py-8" />
-            <EmptyState icon={CalendarClock} title="Nothing scheduled" description="Upcoming activities will appear here." className="py-8" />
+            {upcoming.length ? (
+              <ul className="flex flex-col gap-2">
+                {upcoming.map((t) => (
+                  <li key={t.id}><Link to="/planner" className="flex items-center justify-between gap-2 rounded-xl bg-secondary px-3 py-2.5 text-sm hover:bg-accent">
+                    <span className="truncate">{t.title}</span>
+                    <span className={`shrink-0 text-xs ${today && t.due && t.due < today ? "text-destructive" : "text-muted-foreground"}`}>{t.due ? (t.due === today ? "Today" : formatDue(t.due)) : "No date"}</span>
+                  </Link></li>
+                ))}
+              </ul>
+            ) : <EmptyState icon={ListChecks} title="No pending tasks" description="Tasks you add in Planner will show up here." className="py-8" />}
+            {recent.length ? (
+              <ul className="flex flex-col gap-2">
+                {recent.map((n) => (
+                  <li key={n.id}><Link to="/notes" className="block rounded-xl bg-secondary px-3 py-2.5 hover:bg-accent">
+                    <p className="truncate text-sm font-medium">{n.title.trim() || "Untitled"}</p>
+                    <p className="truncate text-xs text-muted-foreground">{n.content.trim().slice(0, 60) || "No content"}</p>
+                  </Link></li>
+                ))}
+              </ul>
+            ) : <EmptyState icon={NotebookPen} title="No notes yet" description="Your recent notes will appear here." className="py-8" />}
           </div>
         </Panel>
       </div>

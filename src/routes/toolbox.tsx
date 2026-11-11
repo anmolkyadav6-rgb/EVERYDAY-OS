@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
-import { Calculator, Ruler, Type, Timer, QrCode, Percent, ArrowLeftRight, Copy } from "lucide-react";
+import { useState } from "react";
+import { Calculator, Timer, QrCode, Percent, ArrowLeftRight, Copy } from "lucide-react";
 import { PageHeader, Panel, SoonBadge } from "@/components/os/ui";
 import { cn } from "@/lib/utils";
 import { calculate, caseFns, convert, textStats, units, type Category } from "@/lib/tools";
@@ -20,10 +20,6 @@ export const Route = createFileRoute("/toolbox")({
 });
 
 const field = "w-full rounded-xl border bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring";
-
-function ToolTitle({ icon: Icon, children }: { icon: typeof Calculator; children: ReactNode }) {
-  return <span className="flex items-center gap-2"><span className="grid size-7 place-items-center rounded-lg bg-accent text-accent-foreground"><Icon className="size-4" /></span>{children}</span>;
-}
 
 function CalculatorTool() {
   const [expr, setExpr] = useState("");
@@ -142,5 +138,3 @@ function Toolbox() {
     </div>
   );
 }
-// keep icon imports referenced
-void Ruler; void Type; void ToolTitle;
