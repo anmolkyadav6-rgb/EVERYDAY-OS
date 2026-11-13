@@ -1,6 +1,23 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/lib/theme";
+import dayLandscape from "@/assets/mountain-day.jpg";
+import nightLandscape from "@/assets/mountain-night.jpg";
+
+export function LandscapeBanner({ title, description, className }: { title: string; description?: string; className?: string }) {
+  const { resolved } = useTheme();
+  return (
+    <section className={cn("relative isolate mb-5 min-h-36 overflow-hidden rounded-2xl border bg-card sm:min-h-40", className)}>
+      <img src={resolved === "dark" ? nightLandscape : dayLandscape} alt="" width={1536} height={1024} fetchPriority="high" className="absolute inset-0 size-full object-cover object-center" />
+      <div className="landscape-wash absolute inset-0" />
+      <div className="relative flex min-h-36 max-w-[70%] flex-col justify-center p-5 sm:min-h-40 sm:p-6">
+        <h2 className="text-lg font-semibold leading-snug sm:text-xl">{title}</h2>
+        {description && <p className="mt-1 max-w-xs text-sm text-muted-foreground">{description}</p>}
+      </div>
+    </section>
+  );
+}
 
 export function PageHeader({ eyebrow, title, description, children }: { eyebrow?: string; title: string; description?: string; children?: ReactNode }) {
   return (

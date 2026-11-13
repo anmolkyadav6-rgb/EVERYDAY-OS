@@ -37,20 +37,21 @@ function createStore<T>(key: string) {
 }
 
 export type Priority = "low" | "medium" | "high";
-export type Task = { id: string; title: string; description: string; due: string; priority: Priority; done: boolean; createdAt: number };
-export type Note = { id: string; title: string; content: string; updatedAt: number };
+export type Task = { id: string; title: string; description: string; due: string; dueTime?: string; category?: string; priority: Priority; done: boolean; createdAt: number };
+export type Note = { id: string; title: string; content: string; category?: string; pinned?: boolean; updatedAt: number };
 
 export const taskStore = createStore<Task>("everyday-os:tasks");
 export const noteStore = createStore<Note>("everyday-os:notes");
 
 export const uid = () => (typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : String(Date.now() + Math.random()));
 
-export type TaskInput = { title: string; description: string; due: string; priority: Priority };
+export type TaskInput = { title: string; description: string; due: string; dueTime?: string; category?: string; priority: Priority };
 export function validateTask(t: TaskInput): string | null {
   if (!t.title.trim()) return "Title is required.";
   if (t.title.trim().length > 120) return "Title must be 120 characters or fewer.";
   if (t.description.length > 1000) return "Description must be 1000 characters or fewer.";
   if (t.due && !/^\d{4}-\d{2}-\d{2}$/.test(t.due)) return "Due date is invalid.";
+  if (t.dueTime && !/^([01]\d|2[0-3]):[0-5]\d$/.test(t.dueTime)) return "Due time is invalid.";
   if (!["low", "medium", "high"].includes(t.priority)) return "Choose a priority.";
   return null;
 }
